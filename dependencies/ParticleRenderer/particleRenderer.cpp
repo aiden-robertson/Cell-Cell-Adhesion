@@ -1,10 +1,5 @@
 #include "particleRenderer.h"
 
-#include <GL/glew.h>
-#include <cmath>
-#include <iostream>
-#include <numbers>
-
 namespace gfx
 {
     #pragma region CircleRenderer

@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(ParticleRenderer)
 
+# C++ version
+set(CMAKE_CXX_STANDARD 23)
+
 add_library(ParticleRenderer particleRenderer.cpp)
 
 # FORCE the compiler to check your thirdparty folder first
@@ -10,7 +13,6 @@ target_include_directories(ParticleRenderer BEFORE PRIVATE
 )
 
 target_include_directories(ParticleRenderer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(ParticleRenderer PUBLIC Body)
 
 if(WIN32)
     target_compile_definitions(ParticleRenderer PRIVATE GLFW_DLL)

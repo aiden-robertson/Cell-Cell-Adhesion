@@ -4,6 +4,11 @@
 #include <vector>
 #include <array>
 
+#include <GL/glew.h>
+#include <cmath>
+#include <iostream>
+#include <numbers>
+
 // Forward declare OpenGL types (avoids including glew in header)
 // TODO: FIGURE OUT WHAT THIS DOES & COMMENT
 typedef unsigned int GLuint;
