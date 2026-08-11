@@ -2,11 +2,13 @@
 {
   "directory": "/home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/build",
   "command": "/usr/bin/c++  -I/home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/src -I/home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/dependencies -I/home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/dependencies/ParticleRenderer -isystem /usr/include/freetype2 -g -std=gnu++20 -o CMakeFiles/AdhesionStudies.dir/src/main.cpp.o -c /home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/src/main.cpp",
-  "file": "/home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/src/main.cpp"
+  "file": "/home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/src/main.cpp",
+  "output": "CMakeFiles/AdhesionStudies.dir/src/main.cpp.o"
 },
 {
   "directory": "/home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/build/dependencies/ParticleRenderer",
   "command": "/usr/bin/c++  -I/home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/thirdparty -I/home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/dependencies -I/home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/dependencies/ParticleRenderer -g -std=gnu++23 -o CMakeFiles/ParticleRenderer.dir/particleRenderer.cpp.o -c /home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/dependencies/ParticleRenderer/particleRenderer.cpp",
-  "file": "/home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/dependencies/ParticleRenderer/particleRenderer.cpp"
+  "file": "/home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/dependencies/ParticleRenderer/particleRenderer.cpp",
+  "output": "dependencies/ParticleRenderer/CMakeFiles/ParticleRenderer.dir/particleRenderer.cpp.o"
 }
 ]

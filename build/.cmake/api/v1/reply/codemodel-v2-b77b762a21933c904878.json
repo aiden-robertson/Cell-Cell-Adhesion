@@ -74,14 +74,14 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "AdhesionStudies::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-AdhesionStudies-Debug-fd5c08c45b3844d5d9ba.json",
+					"jsonFile" : "target-AdhesionStudies-Debug-07c05caea018f72af2ce.json",
 					"name" : "AdhesionStudies",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 1,
 					"id" : "ParticleRenderer::@c175fbdc4b59983e4150",
-					"jsonFile" : "target-ParticleRenderer-Debug-f374d67fe81911ba95dc.json",
+					"jsonFile" : "target-ParticleRenderer-Debug-9263b1613dacfe4cedfe.json",
 					"name" : "ParticleRenderer",
 					"projectIndex" : 1
 				}
@@ -97,6 +97,6 @@
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 3
+		"minor" : 6
 	}
 }

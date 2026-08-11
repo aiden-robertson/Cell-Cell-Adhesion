@@ -16,7 +16,8 @@
 		],
 		"files" : 
 		[
-			"CMakeLists.txt"
+			"CMakeLists.txt",
+			"dependencies/ParticleRenderer/CMakeLists.txt"
 		],
 		"nodes" : 
 		[
@@ -36,6 +37,15 @@
 				"parent" : 0
 			},
 			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 29,
+				"parent" : 3
+			},
+			{
 				"command" : 2,
 				"file" : 0,
 				"line" : 23,
@@ -49,24 +59,21 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g"
-				},
-				{
-					"fragment" : "-std=gnu++20"
+					"fragment" : "-g -std=gnu++20"
 				}
 			],
 			"includes" : 
 			[
 				{
-					"backtrace" : 3,
+					"backtrace" : 5,
 					"path" : "/home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/src"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 5,
 					"path" : "/home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/dependencies"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 5,
 					"path" : "/home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/dependencies/ParticleRenderer"
 				},
 				{
@@ -136,14 +143,17 @@
 				"role" : "libraries"
 			},
 			{
+				"backtrace" : 4,
 				"fragment" : "/usr/lib/x86_64-linux-gnu/libGL.so",
 				"role" : "libraries"
 			},
 			{
+				"backtrace" : 4,
 				"fragment" : "/usr/lib/x86_64-linux-gnu/libGLEW.so",
 				"role" : "libraries"
 			},
 			{
+				"backtrace" : 4,
 				"fragment" : "/usr/lib/x86_64-linux-gnu/libglfw.so.3.3",
 				"role" : "libraries"
 			}

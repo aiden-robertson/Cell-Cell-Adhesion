@@ -6,6 +6,8 @@
 #include <fstream>
 #include <sstream>
 
+#include <filesystem>
+
 // Collections
 #include <vector>
 #include <array>
