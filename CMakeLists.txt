@@ -3,7 +3,7 @@
 # ----------------------------------------
 
 # The code in this project is designed to work on Ubuntu with all necessary graphics libraries.
-# It serves as a computational agent-based simulation of how adhesion can effect emergent 
+# It serves as a computational agent-based simulation of how adhesion can effect emergent
 # Behaviors in multicellular life.
 
 # Project information
@@ -15,6 +15,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 # Custom libs as subdirectories
 add_subdirectory(dependencies/ParticleRenderer)
+add_subdirectory(dependencies/Bodies)
 
 # Main executable
 add_executable(AdhesionStudies src/main.cpp)
@@ -24,6 +25,7 @@ target_include_directories(AdhesionStudies PRIVATE
     src
     dependencies
     dependencies/ParticleRenderer
+    dependencies/Bodies
 )
 
 # Required third party packages (must be installed globally on system)
@@ -35,6 +37,7 @@ find_package(Freetype REQUIRED)
 # Link everything to executable
 target_link_libraries(AdhesionStudies PRIVATE
     ParticleRenderer
+    Bodies
     glfw
     OpenGL::GL
     GLEW::GLEW

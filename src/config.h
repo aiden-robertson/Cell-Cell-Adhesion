@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-// IO managment
+// IO management
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -19,5 +19,6 @@
 
 // Custom libraries
 #include "particleRenderer.h"
+#include "bodies.h"
 
 #endif

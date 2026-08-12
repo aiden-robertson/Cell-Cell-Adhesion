@@ -16,8 +16,7 @@
 		],
 		"files" : 
 		[
-			"CMakeLists.txt",
-			"dependencies/ParticleRenderer/CMakeLists.txt"
+			"CMakeLists.txt"
 		],
 		"nodes" : 
 		[
@@ -27,28 +26,19 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 20,
+				"line" : 21,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 36,
+				"line" : 38,
 				"parent" : 0
-			},
-			{
-				"file" : 1
-			},
-			{
-				"command" : 1,
-				"file" : 1,
-				"line" : 29,
-				"parent" : 3
 			},
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 23,
+				"line" : 24,
 				"parent" : 0
 			}
 		]
@@ -65,16 +55,20 @@
 			"includes" : 
 			[
 				{
-					"backtrace" : 5,
-					"path" : "/home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/src"
+					"backtrace" : 3,
+					"path" : "/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/src"
 				},
 				{
-					"backtrace" : 5,
-					"path" : "/home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/dependencies"
+					"backtrace" : 3,
+					"path" : "/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/dependencies"
 				},
 				{
-					"backtrace" : 5,
-					"path" : "/home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/dependencies/ParticleRenderer"
+					"backtrace" : 3,
+					"path" : "/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/dependencies/ParticleRenderer"
+				},
+				{
+					"backtrace" : 3,
+					"path" : "/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/dependencies/Bodies"
 				},
 				{
 					"backtrace" : 2,
@@ -102,6 +96,10 @@
 		{
 			"backtrace" : 2,
 			"id" : "ParticleRenderer::@c175fbdc4b59983e4150"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "Bodies::@d98ef09ca1d0f944102a"
 		}
 	],
 	"id" : "AdhesionStudies::@6890427a1f51a3e7e1df",
@@ -124,6 +122,11 @@
 			},
 			{
 				"backtrace" : 2,
+				"fragment" : "dependencies/Bodies/libBodies.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
 				"fragment" : "/usr/lib/x86_64-linux-gnu/libglfw.so.3.3",
 				"role" : "libraries"
 			},
@@ -140,21 +143,6 @@
 			{
 				"backtrace" : 2,
 				"fragment" : "/usr/lib/x86_64-linux-gnu/libfreetype.so",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 4,
-				"fragment" : "/usr/lib/x86_64-linux-gnu/libGL.so",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 4,
-				"fragment" : "/usr/lib/x86_64-linux-gnu/libGLEW.so",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 4,
-				"fragment" : "/usr/lib/x86_64-linux-gnu/libglfw.so.3.3",
 				"role" : "libraries"
 			}
 		],

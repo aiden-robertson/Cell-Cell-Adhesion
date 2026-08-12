@@ -1,0 +1,2 @@
+/usr/bin/ar qc libBodies.a CMakeFiles/Bodies.dir/bodies.cpp.o
+/usr/bin/ranlib libBodies.a

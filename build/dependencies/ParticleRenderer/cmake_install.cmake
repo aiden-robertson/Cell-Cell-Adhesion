@@ -1,4 +1,4 @@
-# Install script for directory: /home/arobertson/Documents/GitHub/Cell-Cell-Adhesion/dependencies/ParticleRenderer
+# Install script for directory: /home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/dependencies/ParticleRenderer
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
