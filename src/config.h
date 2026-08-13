@@ -17,6 +17,10 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+// Math
+#include <algorithm>
+#include <cmath>
+
 // Custom libraries
 #include "particleRenderer.h"
 #include "bodies.h"

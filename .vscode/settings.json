@@ -1,3 +1,10 @@
 {
-    "cmake.sourceDirectory": "/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion"
+    "cmake.sourceDirectory": "/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion",
+    "cSpell.words": [
+        "glew",
+        "GLEW",
+        "glfw",
+        "GLFW",
+        "Wwindow"
+    ]
 }

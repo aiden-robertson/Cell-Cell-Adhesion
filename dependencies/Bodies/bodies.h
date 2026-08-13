@@ -6,14 +6,17 @@
 #include <array>
 #include <unordered_map>
 
+// Math
+#include <random>
+
 namespace bodies
 {
     /* Particles */
     #pragma region Particles
-
     struct GlobalParticle
     {
-        
+        static constexpr float repelRadius = .1;
+        static constexpr float radius = .05;
     };
 
     class Particle
@@ -29,7 +32,16 @@ namespace bodies
 
         // Goal system
         float goalX, goalY;
+
+        float moveSpeed;
+
+        public:
+            Particle(float x, float y, float size, float mass, float moveSpeed);
     };
+
+    std::vector<Particle> GenerateParticlesFromRandomPositions(
+        int count, float xMin, float xMax, float yMin, float yMax, float massMin, float massMax, float sizeMin, float sizeMax, float moveSpeedMin, float moveSpeedMax, std::mt19937 gen
+    );
 
     #pragma endregion
 

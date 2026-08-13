@@ -11,9 +11,8 @@ const float aspectScale = 100;
 
 /* Studies Related */
 
-const float cellRadius = .1;
-const float particleRadius = .05;
-const float adhesionPointRadius = .01;
+const int particleCount = 10;
+const int cellCount = 10;
 
 #pragma endregion
 
@@ -45,7 +44,7 @@ static unsigned int CompileShader(const std::string& source, unsigned int type)
         // Message length
         int length;
         glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-        
+
         // Actual message (in CString form)
         char* message = new char[length];
         glGetShaderInfoLog(id, length, &length, message);
@@ -167,7 +166,7 @@ int main()
 
     projectRoot = executablePath.parent_path();
 
-    // If it was defualted to build, just move it down
+    // If it was defaulted to build, just move it down
     if(projectRoot.filename() == "build")
         projectRoot = projectRoot.parent_path();
 
@@ -175,17 +174,17 @@ int main()
     GLuint worldShader = InitializeShader((projectRoot / "res/shaders/world.shader").string());
     GLuint uiShader = InitializeShader((projectRoot / "res/shaders/UI.shader").string());
     GLuint textShader = InitializeShader((projectRoot / "res/shaders/text.shader").string());
-    
+
     #pragma endregion
 
-    /* Particle Initialization */
-    #pragma region Particle Initialization
+    /* Cell Initialization */
+    #pragma region Cell Initialization
 
     // Initializes new CircleRenderer object for rendering particles
     gfx::CircleRenderer circleRenderer;
     circleRenderer.CreateBuffer(worldShader, 6);
 
-    // Spawns particles at random normalized positions and adds them to particle list
+    // Spawns cells at random normalized positions and adds them to cell list
     /* CREATION OF A LIST OF EACH PARTICLE */
 
     // Farthest distance in which cells can interact
@@ -214,6 +213,40 @@ int main()
 
     #pragma endregion
 
+    /* Particle Initialization */
+    #pragma region Particle Initialization
+
+    // Spawns particles at random normalized positions and adds them to particle list
+    std::vector<bodies::Particle> particles;
+
+    // Farthest distance in which particles can interact
+    const float maxQueryRadius = bodies::GlobalParticle::repelRadius;
+
+    // Particle diameter for big each grid cell is
+    const float spatialCellSize = std::max(bodies::GlobalParticle::radius * 2, maxQueryRadius * 0.5f); // Each particle must be at least one particle diameter, and also small enough to keep neighbor checks local
+
+    // Calculate how many spaces are needed (in the standard OpenGL -1 to 1 world space)
+    const int gridCols = static_cast<int>(std::ceil(2.0f / spatialCellSize));
+
+    // Total number of cells needed
+    const int gridCellCount = gridCols * gridCols;
+
+    // Range of check per particle
+    const int maxCellOffset = static_cast<int>(std::ceil(maxQueryRadius / spatialCellSize));
+
+    // Create 2d vector of grid cells
+    std::vector<std::vector<int>> gridCells(gridCellCount);
+
+    // Calculate on average how many particles will exist per grid space
+    int reserveAmount = static_cast<int>(particleCount / gridCellCount) + 1; // Estimate how many particles will go into each cell
+    if (reserveAmount < 10) reserveAmount = 10;
+
+    // For each grid cell, allow for enough particles within it
+    for (auto &cell : gridCells)
+        cell.reserve(reserveAmount);
+
+    #pragma endregion
+
     /* Main Loop */
     while (!glfwWindowShouldClose(window))
     {
@@ -234,7 +267,7 @@ int main()
 
     /* CLOSE SHADERS HERE */
 
-    // Safely end progra,
+    // Safely end program
     glfwTerminate();
     return 0;
 }

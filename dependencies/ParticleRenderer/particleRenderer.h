@@ -53,7 +53,10 @@ namespace gfx
 
             void Draw(const Circle& c, GLuint shader, float aspect); // Draws single circle
 
-            void DrawBatch(const std::vector<Circle>& circles, GLuint shader, float aspect); // Draws multiple circles
+            // Draws multiple circles using a packed array of raw values for improved efficiency.
+            // `instanceValues` layout per instance: x, y, radius, r, g, b, a
+            // `instanceCount` is the number of instances (not the number of floats).
+            void DrawBatch(const float* instanceValues, size_t instanceCount, GLuint shader, float aspect);
     };
 }
 

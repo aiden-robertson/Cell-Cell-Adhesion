@@ -115,42 +115,29 @@ namespace gfx
         glBindVertexArray(0);
     }
 
-    /* Multiple Circles Drawing */
-    // Draws multiple circles based on already provided information and given circles information
-    void CircleRenderer::DrawBatch(const std::vector<Circle>& circles, GLuint shader, float aspect)
+    /* Multiple Circles Drawing (raw values) */
+    // Draws multiple circles based on an array of raw per-instance attributes for efficiency.
+    // Each instance is seven floats: x, y, radius, r, g, b, a
+    void CircleRenderer::DrawBatch(const float* instanceValues, size_t instanceCount, GLuint shader, float aspect)
     {
-        if (circles.empty())
+        if (instanceCount == 0 || instanceValues == nullptr)
             return;
 
-        // prepare instance attribute data for all particles in a single contiguous buffer
-        instanceData.resize(circles.size() * 7);
-        for (size_t i = 0; i < circles.size(); ++i)
-        {
-            const Circle& c = circles[i];
-            float *dst = instanceData.data() + i * 7;
-            dst[0] = c.x;
-            dst[1] = c.y;
-            dst[2] = c.radius;
-            dst[3] = c.color[0];
-            dst[4] = c.color[1];
-            dst[5] = c.color[2];
-            dst[6] = c.color[3];
-        }
+        // number of floats to upload
+        size_t floatCount = instanceCount * 7;
+        size_t byteSize = floatCount * sizeof(float);
 
         glBindBuffer(GL_ARRAY_BUFFER, instanceVbo);
-        size_t byteSize = instanceData.size() * sizeof(float);
         if (byteSize > instanceBufferSize)
         {
-            // If the stored buffer is too small, allocate a larger one.
-            // This happens only when the number of particles grows beyond the previous maximum.
-            glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(byteSize), instanceData.data(), GL_DYNAMIC_DRAW);
+            // allocate or reallocate buffer with the provided data
+            glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(byteSize), instanceValues, GL_DYNAMIC_DRAW);
             instanceBufferSize = byteSize;
         }
         else
         {
-            // If the buffer already has enough space, update only the used portion.
-            // This avoids reallocating the GPU buffer every frame.
-            glBufferSubData(GL_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(byteSize), instanceData.data());
+            // update only the used portion
+            glBufferSubData(GL_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(byteSize), instanceValues);
         }
 
         // What shader and vertex array OpenGL should use to render
@@ -164,7 +151,7 @@ namespace gfx
 
         glUniform1f(aspectLoc, aspect);
         // Draw the same circle mesh once per particle instance using the instance buffer
-        glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, vertexCount, static_cast<GLsizei>(circles.size()));
+        glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, vertexCount, static_cast<GLsizei>(instanceCount));
 
         // Unbinds intermediates
         glBindVertexArray(0);
