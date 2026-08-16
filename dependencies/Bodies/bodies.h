@@ -11,17 +11,6 @@
 
 namespace bodies
 {
-    /* Particles */
-    #pragma region Particles
-    struct GlobalParticle
-    {
-        static constexpr float repelRadius = .1;
-        static constexpr float radius = .05;
-
-        // Shared color for all Particle instances. Particles no longer store per-instance color.
-        static std::array<float,4> color;
-    };
-
     class Body
     {
         protected:
@@ -31,17 +20,24 @@ namespace bodies
             // Particle radius
             float radius;
 
-            // Particle color (default for non-Particle bodies). Particles override this.
             std::array<float, 4> rgba;
 
         public:
             Body(float x = 0.0f, float y = 0.0f, float size = 0.0f, float mass = 0.0f);
             virtual ~Body() = default;
 
-            float getX() const { return x; }
-            float getY() const { return y; }
-            float getRadius() const { return radius; }
-            virtual const std::array<float,4>& getColor() const { return rgba; }
+            const float& GetX() const { return x; }
+            const float& GetY() const { return y; }
+            const float& GetRadius() const { return radius; }
+            virtual const std::array<float,4>& GetColor() const { return rgba; }
+    };
+
+    /* Particles */
+    #pragma region Particles
+    struct GlobalParticle
+    {
+        static constexpr float repelRadius = .1;
+        static constexpr float radius = .05;
     };
 
     class Particle : public Body
@@ -60,11 +56,9 @@ namespace bodies
         public:
             Particle(float x, float y, float size, float mass, float moveSpeed);
 
-            // Particles share a global color; this returns the shared color.
-            const std::array<float,4>& getColor() const override;
 
-            // Mass accessor
-            float getMass() const { return mass; }
+
+            const float& GetMass() const { return mass; }
     };
 
     std::vector<Particle> SpawnParticles(

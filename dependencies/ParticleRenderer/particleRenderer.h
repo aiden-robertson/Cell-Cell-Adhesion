@@ -62,12 +62,9 @@ namespace gfx
 
             void Draw(const bodies::Body& b, GLuint shader, float aspect);
 
-            // If `renderRadiusOverride` > 0, the renderer will use it for all instance radii
-            // instead of each particle's stored radius. This separates rendering size from
-            // physics collision size stored in `bodies::GlobalParticle`.
-            void DrawBatch(const std::vector<bodies::Particle>& particles, GLuint shader, float aspect, float renderRadiusOverride = 0.0f);
+            void DrawBatch(const std::vector<bodies::Particle>& particles, GLuint shader, float aspect, const std::array<float,4>& renderColor, float renderRadiusOverride = 0.0f);
 
-            void DrawBatch(const float* instanceValues, size_t instanceCount, GLuint shader, float aspect);
+            void DrawBatch(const float* instanceValues, size_t instanceCount, GLuint shader, float aspect, const std::array<float,4>& renderColor, float renderRadiusOverride = 0.0f);
     };
 }
 

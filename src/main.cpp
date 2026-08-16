@@ -235,6 +235,9 @@ int main()
     // Spawns particles at random normalized positions and adds them to particle list
     std::vector<bodies::Particle> particles = bodies::SpawnParticles(particleCount, -1, 1, -1, 1, 1, 1, .1, .1, .1, .1, gen);
 
+    // Rendering color for particles (defined in main and passed to renderer)
+    const std::array<float,4> particleColor = {1.0f, 1.0f, 1.0f, 1.0f};
+
     // Farthest distance in which particles can interact
     const float maxQueryRadius = bodies::GlobalParticle::repelRadius;
 
@@ -274,8 +277,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         /* RENDER STUFF HERE */
-        // Use `particleRadius` for rendering size while physics uses `bodies::GlobalParticle::radius`
-        circleRenderer.DrawBatch(particles, worldShader, aspect, particleRadius);
+        circleRenderer.DrawBatch(particles, worldShader, aspect, particleColor, particleRadius);
 
         glfwPollEvents();
 

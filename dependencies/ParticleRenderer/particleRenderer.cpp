@@ -136,18 +136,18 @@ namespace gfx
             GLint scale = glGetUniformLocation(shader, "u_Scale");
             GLint asp = glGetUniformLocation(shader, "u_Aspect");
             GLint col = glGetUniformLocation(shader, "desiredColor");
-            if (pos != -1) glUniform2f(pos, b.getX(), b.getY());
-            if (scale != -1) glUniform1f(scale, b.getRadius());
+            if (pos != -1) glUniform2f(pos, b.GetX(), b.GetY());
+            if (scale != -1) glUniform1f(scale, b.GetRadius());
             if (asp != -1) glUniform1f(asp, aspect);
-            auto c = b.getColor();
+            auto c = b.GetColor();
             if (col != -1) glUniform4f(col, c[0], c[1], c[2], c[3]);
         }
         else
         {
-            glUniform2f(posLoc, b.getX(), b.getY());
-            glUniform1f(scaleLoc, b.getRadius());
+            glUniform2f(posLoc, b.GetX(), b.GetY());
+            glUniform1f(scaleLoc, b.GetRadius());
             glUniform1f(aspectLoc, aspect);
-            auto c = b.getColor();
+            auto c = b.GetColor();
             glUniform4f(colorLoc, c[0], c[1], c[2], c[3]);
         }
 
@@ -161,7 +161,7 @@ namespace gfx
     /* Multiple Circles Drawing (raw values) */
     // Draws multiple circles based on an array of raw per-instance attributes for efficiency.
     // Each instance is seven floats: x, y, radius, r, g, b, a
-    void CircleRenderer::DrawBatch(const float* instanceValues, size_t instanceCount, GLuint shader, float aspect)
+    void CircleRenderer::DrawBatch(const float* instanceValues, size_t instanceCount, GLuint shader, float aspect, const std::array<float,4>& renderColor, float renderRadiusOverride)
     {
         if (instanceCount == 0 || instanceValues == nullptr)
             return;
@@ -202,7 +202,7 @@ namespace gfx
 
     /** Build a packed instance buffer from a vector of `bodies::Particle` and render. */
     // Build instanceData (layout: x,y,radius,r,g,b,a) and issue an instanced draw
-    void CircleRenderer::DrawBatch(const std::vector<bodies::Particle>& particles, GLuint shader, float aspect, float renderRadiusOverride)
+    void CircleRenderer::DrawBatch(const std::vector<bodies::Particle>& particles, GLuint shader, float aspect, const std::array<float,4>& renderColor, float renderRadiusOverride)
     {
         if (particles.empty())
             return;
@@ -214,28 +214,29 @@ namespace gfx
         {
             const bodies::Particle& p = particles[i];
             float *dst = instanceData.data() + i * 7;
-            dst[0] = p.getX();
-            dst[1] = p.getY();
+            dst[0] = p.GetX();
+            dst[1] = p.GetY();
+
             // Use the override when provided so rendering size can differ from physics size
-            dst[2] = (renderRadiusOverride > 0.0f) ? renderRadiusOverride : p.getRadius();
-            auto col = p.getColor();
-            dst[3] = col[0];
-            dst[4] = col[1];
-            dst[5] = col[2];
-            dst[6] = col[3];
+            dst[2] = (renderRadiusOverride > 0.0f) ? renderRadiusOverride : p.GetRadius();
+
+            dst[3] = renderColor[0];
+            dst[4] = renderColor[1];
+            dst[5] = renderColor[2];
+            dst[6] = renderColor[3];
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, instanceVbo);
         size_t byteSize = instanceData.size() * sizeof(float);
         if (byteSize > instanceBufferSize)
         {
-            // allocate or reallocate buffer with the provided data
+            // Allocate or reallocate buffer with the provided data
             glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(byteSize), instanceData.data(), GL_DYNAMIC_DRAW);
             instanceBufferSize = byteSize;
         }
         else
         {
-            // update only the used portion
+            // Update only the used portion
             glBufferSubData(GL_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(byteSize), instanceData.data());
         }
 
@@ -249,6 +250,7 @@ namespace gfx
         }
 
         glUniform1f(aspectLoc, aspect);
+
         // Draw the same circle mesh once per particle instance using the instance buffer
         glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, vertexCount, static_cast<GLsizei>(count));
 

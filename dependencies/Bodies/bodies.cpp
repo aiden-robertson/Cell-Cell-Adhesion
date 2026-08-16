@@ -2,8 +2,6 @@
 
 namespace bodies
 {
-    // Define the shared particle color
-    std::array<float,4> GlobalParticle::color = {1.0f, 1.0f, 1.0f, 1.0f};
 
     /* Particles */
     #pragma region Particles
@@ -19,10 +17,6 @@ namespace bodies
         : Body(x, y, size, mass), velX(0.0f), velY(0.0f), size(size), mass(mass), goalX(0.0f), goalY(0.0f), moveSpeed(moveSpeed)
     {}
 
-    const std::array<float,4>& Particle::getColor() const
-    {
-        return GlobalParticle::color;
-    }
 
     /* Generate x Amount of Particles */
     // Spawns x amount of particles at random positions with given ranges
