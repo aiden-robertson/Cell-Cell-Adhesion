@@ -9,10 +9,6 @@
 #include <iostream>
 #include <numbers>
 
-// Forward declare OpenGL types (avoids including glew in header)
-// TODO: FIGURE OUT WHAT THIS DOES & COMMENT
-typedef unsigned int GLuint;
-
 // Bodies types
 #include <bodies.h>
 

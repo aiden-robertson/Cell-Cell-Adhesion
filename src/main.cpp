@@ -17,6 +17,7 @@ const int cellCount = 10;
 /* Visuals Related */
 
 const float particleRadius = .005;
+const std::array<float, 4> particleColor = {1.0f, 1.0f, 1.0f, 1.0f};
 
 #pragma endregion
 
@@ -134,12 +135,13 @@ static unsigned int InitializeShader(const std::string path)
 
 #pragma endregion
 
+/* Random Number Generation Setup */
+// Populate bodies::gen to be used globally
+static std::random_device global_random_device;
+namespace bodies { std::mt19937 gen(global_random_device()); }
+
 int main()
 {
-    // Random number generation
-    std::random_device randomDevice;
-    std::mt19937 gen(randomDevice());
-
     /* Window Creation */
     #pragma region Window Creation
 
@@ -233,10 +235,7 @@ int main()
     #pragma region Particle Initialization
 
     // Spawns particles at random normalized positions and adds them to particle list
-    std::vector<bodies::Particle> particles = bodies::SpawnParticles(particleCount, -1, 1, -1, 1, 1, 1, .1, .1, .1, .1, gen);
-
-    // Rendering color for particles (defined in main and passed to renderer)
-    const std::array<float,4> particleColor = {1.0f, 1.0f, 1.0f, 1.0f};
+    std::vector<bodies::Particle> particles = bodies::SpawnParticles(particleCount, -1, 1, -1, 1, 1, 1, .1, .1, .001, .001);
 
     // Farthest distance in which particles can interact
     const float maxQueryRadius = bodies::GlobalParticle::repelRadius;
@@ -269,9 +268,30 @@ int main()
     /* Main Loop */
     while (!glfwWindowShouldClose(window))
     {
+        // TEMP: shuffle particle goals on spacebar press
+        // Added at request for quick testing; remove this block when finished.
+        static bool _temp_space_was_pressed = false;
+        auto _temp_shuffle_goals = [&](std::vector<bodies::Particle>& ps){
+            std::uniform_real_distribution<float> d(-1.0f, 1.0f);
+            for (auto &p : ps)
+                p.SetGoal(d(bodies::gen), d(bodies::gen));
+        };
+        int _space = glfwGetKey(window, GLFW_KEY_SPACE);
+        if (_space == GLFW_PRESS && !_temp_space_was_pressed)
+        {
+            _temp_shuffle_goals(particles);
+        }
+        _temp_space_was_pressed = (_space == GLFW_PRESS);
+
         /* DELTA TIME CALCULATIONS */
 
         /* EVERY FRAME CALCULATIONS */
+
+        // Update positioning of each particle
+        for(int i = 0; i < particleCount; i++)
+        {
+            particles[i].Update();
+        }
 
         // Clear screen
         glClear(GL_COLOR_BUFFER_BIT);
