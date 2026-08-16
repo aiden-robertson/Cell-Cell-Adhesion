@@ -19,3 +19,8 @@ add_library(ParticleRenderer particleRenderer.cpp)
 target_include_directories(ParticleRenderer PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
+ 
+# Link against Bodies library so its include dirs are propagated
+target_link_libraries(ParticleRenderer PUBLIC
+    Bodies
+)

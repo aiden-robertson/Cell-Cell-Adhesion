@@ -2,19 +2,31 @@
 
 namespace bodies
 {
+    // Define the shared particle color
+    std::array<float,4> GlobalParticle::color = {1.0f, 1.0f, 1.0f, 1.0f};
+
     /* Particles */
     #pragma region Particles
 
     /* Particle */
     #pragma region Particle
 
-    Particle::Particle(float x, float y, float size, float mass, float moveSpeed): x(x), y(y), size(size), mass(mass), moveSpeed(moveSpeed)
-    {
+    Body::Body(float x, float y, float size, float /*mass*/)
+        : x(x), y(y), radius(size), rgba{1.0f, 1.0f, 1.0f, 1.0f}
+    {}
 
-    };
+    Particle::Particle(float x, float y, float size, float mass, float moveSpeed)
+        : Body(x, y, size, mass), velX(0.0f), velY(0.0f), size(size), mass(mass), goalX(0.0f), goalY(0.0f), moveSpeed(moveSpeed)
+    {}
+
+    const std::array<float,4>& Particle::getColor() const
+    {
+        return GlobalParticle::color;
+    }
 
     /* Generate x Amount of Particles */
-    std::vector<Particle> GenerateParticlesFromRandomPositions(
+    // Spawns x amount of particles at random positions with given ranges
+    std::vector<Particle> SpawnParticles(
         int count, float xMin, float xMax, float yMin, float yMax, float massMin, float massMax, float sizeMin, float sizeMax, float moveSpeedMin, float moveSpeedMax, std::mt19937 gen
     ) {
         // Particle vector to eventually be returned

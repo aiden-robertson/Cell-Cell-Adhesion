@@ -1642,6 +1642,18 @@
 			"value" : "OFF"
 		},
 		{
+			"name" : "ParticleRenderer_LIB_DEPENDS",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Dependencies for the target"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "general;Bodies;"
+		},
+		{
 			"name" : "ParticleRenderer_SOURCE_DIR",
 			"properties" : 
 			[

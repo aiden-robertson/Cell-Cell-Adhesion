@@ -20,6 +20,7 @@
 // Math
 #include <algorithm>
 #include <cmath>
+#include <random>
 
 // Custom libraries
 #include "particleRenderer.h"

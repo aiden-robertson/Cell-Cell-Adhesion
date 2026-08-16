@@ -13,6 +13,9 @@
 // TODO: FIGURE OUT WHAT THIS DOES & COMMENT
 typedef unsigned int GLuint;
 
+// Bodies types
+#include <bodies.h>
+
 // Helper functions for circle rendering
 namespace gfx
 {
@@ -43,6 +46,10 @@ namespace gfx
 
             // Circle rendering stuff
             int aspectLoc;
+            int posLoc;
+            int scaleLoc;
+            int colorLoc;
+
             std::vector<float> instanceData;
             size_t instanceBufferSize;
 
@@ -53,9 +60,13 @@ namespace gfx
 
             void Draw(const Circle& c, GLuint shader, float aspect); // Draws single circle
 
-            // Draws multiple circles using a packed array of raw values for improved efficiency.
-            // `instanceValues` layout per instance: x, y, radius, r, g, b, a
-            // `instanceCount` is the number of instances (not the number of floats).
+            void Draw(const bodies::Body& b, GLuint shader, float aspect);
+
+            // If `renderRadiusOverride` > 0, the renderer will use it for all instance radii
+            // instead of each particle's stored radius. This separates rendering size from
+            // physics collision size stored in `bodies::GlobalParticle`.
+            void DrawBatch(const std::vector<bodies::Particle>& particles, GLuint shader, float aspect, float renderRadiusOverride = 0.0f);
+
             void DrawBatch(const float* instanceValues, size_t instanceCount, GLuint shader, float aspect);
     };
 }

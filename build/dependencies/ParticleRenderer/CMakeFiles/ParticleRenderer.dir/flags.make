@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/g++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/dependencies/ParticleRenderer
+CXX_INCLUDES = -I/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/dependencies/ParticleRenderer -I/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/dependencies/Bodies
 
 CXX_FLAGS = -g -std=gnu++23
 

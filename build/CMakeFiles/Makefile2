@@ -140,7 +140,7 @@ CMakeFiles/AdhesionStudies.dir/clean:
 # Target rules for target dependencies/ParticleRenderer/CMakeFiles/ParticleRenderer.dir
 
 # All Build rule for target.
-dependencies/ParticleRenderer/CMakeFiles/ParticleRenderer.dir/all:
+dependencies/ParticleRenderer/CMakeFiles/ParticleRenderer.dir/all: dependencies/Bodies/CMakeFiles/Bodies.dir/all
 	$(MAKE) $(MAKESILENT) -f dependencies/ParticleRenderer/CMakeFiles/ParticleRenderer.dir/build.make dependencies/ParticleRenderer/CMakeFiles/ParticleRenderer.dir/depend
 	$(MAKE) $(MAKESILENT) -f dependencies/ParticleRenderer/CMakeFiles/ParticleRenderer.dir/build.make dependencies/ParticleRenderer/CMakeFiles/ParticleRenderer.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/build/CMakeFiles --progress-num=5,6 "Built target ParticleRenderer"
@@ -148,7 +148,7 @@ dependencies/ParticleRenderer/CMakeFiles/ParticleRenderer.dir/all:
 
 # Build rule for subdir invocation for target.
 dependencies/ParticleRenderer/CMakeFiles/ParticleRenderer.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 dependencies/ParticleRenderer/CMakeFiles/ParticleRenderer.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/build/CMakeFiles 0
 .PHONY : dependencies/ParticleRenderer/CMakeFiles/ParticleRenderer.dir/rule

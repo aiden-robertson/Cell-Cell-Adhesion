@@ -307,6 +307,9 @@ ParticleRenderer_BINARY_DIR:STATIC=/home/aiden-robertson/Documents/C++/Cell-Cell
 //Value Computed by CMake
 ParticleRenderer_IS_TOP_LEVEL:STATIC=OFF
 
+//Dependencies for the target
+ParticleRenderer_LIB_DEPENDS:STATIC=general;Bodies;
+
 //Value Computed by CMake
 ParticleRenderer_SOURCE_DIR:STATIC=/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/dependencies/ParticleRenderer
 

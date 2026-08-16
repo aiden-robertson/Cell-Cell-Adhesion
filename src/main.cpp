@@ -11,8 +11,12 @@ const float aspectScale = 100;
 
 /* Studies Related */
 
-const int particleCount = 10;
+const int particleCount = 10000;
 const int cellCount = 10;
+
+/* Visuals Related */
+
+const float particleRadius = .005;
 
 #pragma endregion
 
@@ -132,6 +136,10 @@ static unsigned int InitializeShader(const std::string path)
 
 int main()
 {
+    // Random number generation
+    std::random_device randomDevice;
+    std::mt19937 gen(randomDevice());
+
     /* Window Creation */
     #pragma region Window Creation
 
@@ -152,6 +160,9 @@ int main()
         std::cout << "GLEW failed to start!\n";
         return -1;
     }
+
+    // Aspect to be used for graphics rendering
+    float aspect = static_cast<float>(aspectRatio[0]) / static_cast<float>(aspectRatio[1]);
 
     #pragma endregion
 
@@ -177,12 +188,17 @@ int main()
 
     #pragma endregion
 
-    /* Cell Initialization */
-    #pragma region Cell Initialization
+    /* Buffer Setup */
+    #pragma region Buffer Setup
 
     // Initializes new CircleRenderer object for rendering particles
     gfx::CircleRenderer circleRenderer;
-    circleRenderer.CreateBuffer(worldShader, 6);
+    circleRenderer.CreateBuffer(worldShader, 32);
+
+    #pragma endregion
+
+    /* Cell Initialization */
+    #pragma region Cell Initialization
 
     // Spawns cells at random normalized positions and adds them to cell list
     /* CREATION OF A LIST OF EACH PARTICLE */
@@ -217,7 +233,7 @@ int main()
     #pragma region Particle Initialization
 
     // Spawns particles at random normalized positions and adds them to particle list
-    std::vector<bodies::Particle> particles;
+    std::vector<bodies::Particle> particles = bodies::SpawnParticles(particleCount, -1, 1, -1, 1, 1, 1, .1, .1, .1, .1, gen);
 
     // Farthest distance in which particles can interact
     const float maxQueryRadius = bodies::GlobalParticle::repelRadius;
@@ -258,6 +274,8 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         /* RENDER STUFF HERE */
+        // Use `particleRadius` for rendering size while physics uses `bodies::GlobalParticle::radius`
+        circleRenderer.DrawBatch(particles, worldShader, aspect, particleRadius);
 
         glfwPollEvents();
 
@@ -265,7 +283,10 @@ int main()
         glfwSwapBuffers(window);
     }
 
-    /* CLOSE SHADERS HERE */
+    // Close shaders
+    glDeleteProgram(worldShader);
+    glDeleteProgram(uiShader);
+    glDeleteProgram(textShader);
 
     // Safely end program
     glfwTerminate();
