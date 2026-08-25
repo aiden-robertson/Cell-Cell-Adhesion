@@ -1,6 +1,5 @@
 #include "particleRenderer.h"
 
-#include <bodies.h>
 namespace gfx
 {
     // Initializes empty circle buffer

@@ -273,17 +273,25 @@ int main()
     #pragma endregion
 
     /* Main Loop */
+    #pragma region Main Loop
+
+    // Delta time initialization
+    std::chrono::time_point lastTime = std::chrono::steady_clock::now();
+    std::chrono::time_point currentTime = std::chrono::steady_clock::now();
+    float deltaTime;
+
     while (!glfwWindowShouldClose(window))
     {
         /* DELTA TIME CALCULATIONS */
+        currentTime = std::chrono::steady_clock::now();
+        deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
+        lastTime = currentTime;
 
         /* EVERY FRAME CALCULATIONS */
 
         // Update positioning of each particle
         for(int i = 0; i < particleCount; i++)
-        {
-            particles[i].Update();
-        }
+            particles[i].Update(deltaTime);
 
         // Clear screen
         glClear(GL_COLOR_BUFFER_BIT);
@@ -297,6 +305,11 @@ int main()
         glfwSwapBuffers(window);
     }
 
+    #pragma endregion
+
+    /* End Program */
+    #pragma region End Program
+
     // Close shaders
     glDeleteProgram(worldShader);
     glDeleteProgram(uiShader);
@@ -305,4 +318,6 @@ int main()
     // Safely end program
     glfwTerminate();
     return 0;
+
+    #pragma endregion
 }

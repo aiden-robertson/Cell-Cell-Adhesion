@@ -21,6 +21,7 @@
 #include <algorithm>
 #include <cmath>
 #include <random>
+#include <chrono>
 
 // Custom libraries
 #include "particleRenderer.h"
