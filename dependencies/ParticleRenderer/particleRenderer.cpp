@@ -3,7 +3,6 @@
 #include <bodies.h>
 namespace gfx
 {
-    #pragma region CircleRenderer
     // Initializes empty circle buffer
     CircleRenderer::CircleRenderer(): vao(0), vbo(0), instanceVbo(0), vertexCount(0), aspectLoc(-1), instanceBufferSize(0) {}
 
@@ -158,76 +157,43 @@ namespace gfx
         glBindVertexArray(0);
     }
 
-    /* Multiple Circles Drawing (raw values) */
-    // Draws multiple circles based on an array of raw per-instance attributes for efficiency.
-    // Each instance is seven floats: x, y, radius, r, g, b, a
-    void CircleRenderer::DrawBatch(const float* instanceValues, size_t instanceCount, GLuint shader, float aspect, const std::array<float,4>& renderColor, float renderRadiusOverride)
-    {
-        if (instanceCount == 0 || instanceValues == nullptr)
-            return;
-
-        // Compute number of bytes in the provided instance array and decide whether to reallocate
-        size_t floatCount = instanceCount * 7;
-        size_t byteSize = floatCount * sizeof(float);
-
-        glBindBuffer(GL_ARRAY_BUFFER, instanceVbo);
-        if (byteSize > instanceBufferSize)
-        {
-            // allocate or reallocate buffer with the provided data
-            glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(byteSize), instanceValues, GL_DYNAMIC_DRAW);
-            instanceBufferSize = byteSize;
-        }
-        else
-        {
-            // update only the used portion
-            glBufferSubData(GL_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(byteSize), instanceValues);
-        }
-
-        // Bind shader and VAO ready for instanced rendering
-        glUseProgram(shader);
-        glBindVertexArray(vao);
-
-        if (aspectLoc == -1)
-        {
-            std::cout << "Warning: shader uniform not found!" << std::endl;
-        }
-
-        // Upload aspect uniform then draw all instances in a single instanced draw call
-        glUniform1f(aspectLoc, aspect);
-        glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, vertexCount, static_cast<GLsizei>(instanceCount));
-
-        // Unbind VAO to leave GL state clean
-        glBindVertexArray(0);
-    }
-
-    /** Build a packed instance buffer from a vector of `bodies::Particle` and render. */
-    // Build instanceData (layout: x,y,radius,r,g,b,a) and issue an instanced draw
+    /* Multiple Circles Drawing */
+    // Build a packed instance buffer from a vector of Particles and render
     void CircleRenderer::DrawBatch(const std::vector<bodies::Particle>& particles, GLuint shader, float aspect, const std::array<float,4>& renderColor, float renderRadiusOverride)
     {
+        // If there is no particles to display, exit function
         if (particles.empty())
             return;
-        size_t count = particles.size();
 
         // Prepare instance attribute data for all particles in a single contiguous buffer
+        size_t count = particles.size();
         instanceData.resize(count * 7);
+
         for (size_t i = 0; i < count; ++i)
         {
             const bodies::Particle& p = particles[i];
+            
+            // Link entity to an instance
             float *dst = instanceData.data() + i * 7;
+
+            // Positionning
             dst[0] = p.GetX();
             dst[1] = p.GetY();
 
             // Use the override when provided so rendering size can differ from physics size
             dst[2] = (renderRadiusOverride > 0.0f) ? renderRadiusOverride : p.GetRadius();
 
+            // Coloring
             dst[3] = renderColor[0];
             dst[4] = renderColor[1];
             dst[5] = renderColor[2];
             dst[6] = renderColor[3];
         }
 
+        // Assign each buffer
         glBindBuffer(GL_ARRAY_BUFFER, instanceVbo);
         size_t byteSize = instanceData.size() * sizeof(float);
+
         if (byteSize > instanceBufferSize)
         {
             // Allocate or reallocate buffer with the provided data
@@ -235,20 +201,18 @@ namespace gfx
             instanceBufferSize = byteSize;
         }
         else
-        {
             // Update only the used portion
             glBufferSubData(GL_ARRAY_BUFFER, 0, static_cast<GLsizeiptr>(byteSize), instanceData.data());
-        }
 
         // What shader and vertex array OpenGL should use to render
         glUseProgram(shader);
         glBindVertexArray(vao);
 
+        // Warning if uniforms not found
         if (aspectLoc == -1)
-        {
             std::cout << "Warning: shader uniform not found!" << std::endl;
-        }
 
+        // Update uniform
         glUniform1f(aspectLoc, aspect);
 
         // Draw the same circle mesh once per particle instance using the instance buffer
@@ -257,6 +221,4 @@ namespace gfx
         // Unbinds intermediates
         glBindVertexArray(0);
     }
-
-    #pragma endregion
 }

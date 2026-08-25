@@ -3,7 +3,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "dependencies/ParticleRenderer/libParticleRenderer.a"
+			"path" : "dependencies/Bodies/libBodies.a"
 		}
 	],
 	"backtrace" : 1,
@@ -12,12 +12,11 @@
 		"commands" : 
 		[
 			"add_library",
-			"target_link_libraries",
 			"target_include_directories"
 		],
 		"files" : 
 		[
-			"dependencies/ParticleRenderer/CMakeLists.txt"
+			"dependencies/Bodies/CMakeLists.txt"
 		],
 		"nodes" : 
 		[
@@ -27,19 +26,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 16,
+				"line" : 17,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 24,
-				"parent" : 0
-			},
-			{
-				"command" : 2,
-				"file" : 0,
-				"line" : 19,
+				"line" : 20,
 				"parent" : 0
 			}
 		]
@@ -56,12 +49,8 @@
 			"includes" : 
 			[
 				{
-					"backtrace" : 3,
-					"path" : "/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/dependencies/ParticleRenderer"
-				},
-				{
 					"backtrace" : 2,
-					"path" : "/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/dependencies/Bodies"
+					"path" : "/home/arobertson/Documents/Dev/GitHub/Cell-Cell-Adhesion/dependencies/Bodies"
 				}
 			],
 			"language" : "CXX",
@@ -79,20 +68,13 @@
 			]
 		}
 	],
-	"dependencies" : 
-	[
-		{
-			"backtrace" : 2,
-			"id" : "Bodies::@d98ef09ca1d0f944102a"
-		}
-	],
-	"id" : "ParticleRenderer::@c175fbdc4b59983e4150",
-	"name" : "ParticleRenderer",
-	"nameOnDisk" : "libParticleRenderer.a",
+	"id" : "Bodies::@d98ef09ca1d0f944102a",
+	"name" : "Bodies",
+	"nameOnDisk" : "libBodies.a",
 	"paths" : 
 	{
-		"build" : "dependencies/ParticleRenderer",
-		"source" : "dependencies/ParticleRenderer"
+		"build" : "dependencies/Bodies",
+		"source" : "dependencies/Bodies"
 	},
 	"sourceGroups" : 
 	[
@@ -109,7 +91,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "dependencies/ParticleRenderer/particleRenderer.cpp",
+			"path" : "dependencies/Bodies/bodies.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

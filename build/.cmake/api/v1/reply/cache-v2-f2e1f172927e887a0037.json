@@ -11,7 +11,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/build"
+			"value" : "/home/arobertson/Documents/Dev/GitHub/Cell-Cell-Adhesion/build"
 		},
 		{
 			"name" : "AdhesionStudies_IS_TOP_LEVEL",
@@ -35,7 +35,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion"
+			"value" : "/home/arobertson/Documents/Dev/GitHub/Cell-Cell-Adhesion"
 		},
 		{
 			"name" : "Bodies_BINARY_DIR",
@@ -47,7 +47,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/build/dependencies/Bodies"
+			"value" : "/home/arobertson/Documents/Dev/GitHub/Cell-Cell-Adhesion/build/dependencies/Bodies"
 		},
 		{
 			"name" : "Bodies_IS_TOP_LEVEL",
@@ -71,7 +71,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/dependencies/Bodies"
+			"value" : "/home/arobertson/Documents/Dev/GitHub/Cell-Cell-Adhesion/dependencies/Bodies"
 		},
 		{
 			"name" : "CMAKE_ADDR2LINE",
@@ -127,7 +127,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/build"
+			"value" : "/home/arobertson/Documents/Dev/GitHub/Cell-Cell-Adhesion/build"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -227,11 +227,11 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "No help, variable specified on the command line."
+					"value" : "CXX compiler"
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/g++"
+			"value" : "/usr/bin/c++"
 		},
 		{
 			"name" : "CMAKE_CXX_COMPILER_AR",
@@ -359,7 +359,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/gcc"
+			"value" : "/usr/bin/gcc-9"
 		},
 		{
 			"name" : "CMAKE_C_COMPILER_AR",
@@ -375,7 +375,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/gcc-ar-13"
+			"value" : "/usr/bin/gcc-ar-9"
 		},
 		{
 			"name" : "CMAKE_C_COMPILER_RANLIB",
@@ -391,7 +391,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/gcc-ranlib-13"
+			"value" : "/usr/bin/gcc-ranlib-9"
 		},
 		{
 			"name" : "CMAKE_C_FLAGS",
@@ -615,7 +615,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/build/CMakeFiles/pkgRedirects"
+			"value" : "/home/arobertson/Documents/Dev/GitHub/Cell-Cell-Adhesion/build/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -675,7 +675,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion"
+			"value" : "/home/arobertson/Documents/Dev/GitHub/Cell-Cell-Adhesion"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1627,7 +1627,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/build/dependencies/ParticleRenderer"
+			"value" : "/home/arobertson/Documents/Dev/GitHub/Cell-Cell-Adhesion/build/dependencies/ParticleRenderer"
 		},
 		{
 			"name" : "ParticleRenderer_IS_TOP_LEVEL",
@@ -1663,7 +1663,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/dependencies/ParticleRenderer"
+			"value" : "/home/arobertson/Documents/Dev/GitHub/Cell-Cell-Adhesion/dependencies/ParticleRenderer"
 		},
 		{
 			"name" : "_CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED",

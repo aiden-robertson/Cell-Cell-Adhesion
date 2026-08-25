@@ -1,4 +1,4 @@
-# Install script for directory: /home/aiden-robertson/Documents/C++/Cell-Cell-Adhesion/dependencies/Bodies
+# Install script for directory: /home/arobertson/Documents/Dev/GitHub/Cell-Cell-Adhesion/dependencies/Bodies
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

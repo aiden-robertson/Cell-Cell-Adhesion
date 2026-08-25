@@ -235,7 +235,14 @@ int main()
     #pragma region Particle Initialization
 
     // Spawns particles at random normalized positions and adds them to particle list
-    std::vector<bodies::Particle> particles = bodies::SpawnParticles(particleCount, -1, 1, -1, 1, 1, 1, .1, .1, .001, .001);
+    std::vector<bodies::Particle> particles = bodies::SpawnParticles(
+        particleCount, // Amount of particles to spawn
+        -1, 1, // X min / max
+        -1, 1, // Y min / max
+        1, 10, // Mass min / max
+        .1, .1, // Size min / max
+        .00001, .01 // Speed min / max
+    );
 
     // Farthest distance in which particles can interact
     const float maxQueryRadius = bodies::GlobalParticle::repelRadius;
@@ -268,21 +275,6 @@ int main()
     /* Main Loop */
     while (!glfwWindowShouldClose(window))
     {
-        // TEMP: shuffle particle goals on spacebar press
-        // Added at request for quick testing; remove this block when finished.
-        static bool _temp_space_was_pressed = false;
-        auto _temp_shuffle_goals = [&](std::vector<bodies::Particle>& ps){
-            std::uniform_real_distribution<float> d(-1.0f, 1.0f);
-            for (auto &p : ps)
-                p.SetGoal(d(bodies::gen), d(bodies::gen));
-        };
-        int _space = glfwGetKey(window, GLFW_KEY_SPACE);
-        if (_space == GLFW_PRESS && !_temp_space_was_pressed)
-        {
-            _temp_shuffle_goals(particles);
-        }
-        _temp_space_was_pressed = (_space == GLFW_PRESS);
-
         /* DELTA TIME CALCULATIONS */
 
         /* EVERY FRAME CALCULATIONS */

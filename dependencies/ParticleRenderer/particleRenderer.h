@@ -5,6 +5,7 @@
 #include <array>
 
 #include <GL/glew.h>
+
 #include <cmath>
 #include <iostream>
 #include <numbers>
@@ -58,9 +59,10 @@ namespace gfx
 
             void Draw(const bodies::Body& b, GLuint shader, float aspect);
 
-            void DrawBatch(const std::vector<bodies::Particle>& particles, GLuint shader, float aspect, const std::array<float,4>& renderColor, float renderRadiusOverride = 0.0f);
-
-            void DrawBatch(const float* instanceValues, size_t instanceCount, GLuint shader, float aspect, const std::array<float,4>& renderColor, float renderRadiusOverride = 0.0f);
+            void DrawBatch(
+                const std::vector<bodies::Particle>& particles, GLuint shader, float aspect, const std::array<float,4>& renderColor, 
+                float renderRadiusOverride = 0.0f
+            );
     };
 }
 
