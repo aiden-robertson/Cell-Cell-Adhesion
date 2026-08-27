@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <array>
+#include <concepts>
 
 #include <GL/glew.h>
 
@@ -55,12 +56,27 @@ namespace gfx
 
             void CreateBuffer(GLuint shader, int segments = 32); // Initialization for GPU data
 
-            void Draw(const Circle& c, GLuint shader, float aspect); // Draws single circle
+            // Ensure inputed class type is derived from body
+            template <typename BodyType>
+                requires std::derived_from<BodyType, bodies::Body>
+            void DrawBatch(
+                const std::vector<BodyType>& bodies, GLuint shader, float aspect, const std::array<float,4>& renderColor,
+                float renderRadiusOverride = 0.0f
+            ) {
+                // Loop through each to get a reference
+                std::vector<const bodies::Body*> bodyReferences;
 
-            void Draw(const bodies::Body& b, GLuint shader, float aspect);
+                bodyReferences.reserve(bodies.size());
+
+                for (const BodyType& body : bodies)
+                    bodyReferences.push_back(&body);
+
+                // Run DrawBatch with said references
+                DrawBatch(bodyReferences, shader, aspect, renderColor, renderRadiusOverride);
+            }
 
             void DrawBatch(
-                const std::vector<bodies::Particle>& particles, GLuint shader, float aspect, const std::array<float,4>& renderColor, 
+                const std::vector<const bodies::Body*>& bodies, GLuint shader, float aspect, const std::array<float,4>& renderColor,
                 float renderRadiusOverride = 0.0f
             );
     };

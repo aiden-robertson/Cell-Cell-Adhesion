@@ -117,8 +117,8 @@ std::array<T, N> operator/(const std::array<T, N>& lhs, T rhs)
 
 namespace bodies
 {
-    Body::Body(float x, float y, float size, float mass)
-        : position({x, y}), radius(size), rgba{1.0f, 1.0f, 1.0f, 1.0f}, mass(mass)
+    Body::Body(float x, float y, float size, float mass, std::array<float, 2> velocity)
+        : position({x, y}), radius(size), mass(mass), velocity{velocity}
     {}
 
     /* Particles */
@@ -128,9 +128,9 @@ namespace bodies
     #pragma region Particle
 
     Particle::Particle(
-        float x, float y, float size, float mass, float moveSpeed, std::uniform_real_distribution<float>& goalXDistribution, 
+        float x, float y, float size, float mass, std::uniform_real_distribution<float>& goalXDistribution, 
         std::uniform_real_distribution<float>& goalYDistribution, float goalXMin, float goalXMax, float goalYMin, float goalYMax
-    ) : Body(x, y, size, mass), velocity({0.0f, 0.0f}), moveSpeed(moveSpeed), goalXDistribution(goalXDistribution), goalYDistribution(goalYDistribution)
+    ) : Body(x, y, size, mass), goalXDistribution(goalXDistribution), goalYDistribution(goalYDistribution)
     {
         // Randomly generate a goal
         // goalDistribution will only exist temporarily, so storing is pointless
@@ -146,8 +146,8 @@ namespace bodies
     void Particle::Update(float deltaTime, const std::vector<Particle>& nearbyParticles, const std::vector<Cell>& nearbyCells)
     {
         // Move towards goal
-        velocity += NormalizeArray(goal - position) * moveSpeed;
-        velocity += NormalizeArray(goal - position) * moveSpeed;
+        velocity += NormalizeArray(goal - position) * GlobalParticle::moveSpeed;
+        velocity += NormalizeArray(goal - position) * GlobalParticle::moveSpeed;
 
         // Cap velocity
         if(velocity[0] > maxVelocity)
@@ -178,8 +178,7 @@ namespace bodies
     /* Generate x Amount of Particles */
     // Spawns x amount of particles at random positions with given ranges
     std::vector<Particle> SpawnParticles(
-        int count, float xMin, float xMax, float yMin, float yMax, float massMin, float massMax, float sizeMin, float sizeMax, float moveSpeedMin, 
-        float moveSpeedMax
+        int count, float xMin, float xMax, float yMin, float yMax, float massMin, float massMax, float sizeMin, float sizeMax
     ) {
         // Particle vector to eventually be returned
         std::vector<Particle> particles;
@@ -191,18 +190,69 @@ namespace bodies
         std::uniform_real_distribution<float> xDistribution(xMin, xMax);
         std::uniform_real_distribution<float> yDistribution(yMin, yMax);
 
-        std::uniform_real_distribution<float> moveSpeedDistribution(moveSpeedMin, moveSpeedMax);
-
         // Loop through each of needed amount of particles
         for(int i = 0; i < count; i++)
         {
             particles.push_back(Particle(
-                xDistribution(gen), yDistribution(gen), sizeDistribution(gen), massDistribution(gen), moveSpeedDistribution(gen), xDistribution, 
+                xDistribution(gen), yDistribution(gen), sizeDistribution(gen), massDistribution(gen), xDistribution, 
                 yDistribution, xMin, xMax, yMin, yMax
             ));
         }
 
         return particles;
+    }
+
+    #pragma endregion
+
+    /* Cells */
+    #pragma region Cells
+
+    /* Cell */
+    #pragma region Cell
+
+    Cell::Cell(
+        float x, float y, float size, float mass
+    ) : Body(x, y, size, mass)
+    {
+        // Calculate max velocity from GlobalParticle and existing mass
+        maxVelocity = GlobalParticle::maxVelocity / mass;
+
+        // Initialize timing
+        time = 0;
+        stage = 0; // G1
+
+        // Initialize rotation
+        rotation = 0;
+
+        /* TODO: INITIALIZE ADHESION SITES */
+    }
+
+    #pragma endregion
+
+    /* Generate x Amount of Cells */
+    // Spawns x amount of cells at random positions with given ranges
+    std::vector<Cell> SpawnCells(
+        int count, float xMin, float xMax, float yMin, float yMax, float massMin, float massMax, float sizeMin, float sizeMax
+    ) {
+        // Particle vector to eventually be returned
+        std::vector<Cell> cells;
+
+        // Random number generation prep
+        std::uniform_real_distribution<float> massDistribution(massMin, massMax);
+        std::uniform_real_distribution<float> sizeDistribution(sizeMin, sizeMax);
+
+        std::uniform_real_distribution<float> xDistribution(xMin, xMax);
+        std::uniform_real_distribution<float> yDistribution(yMin, yMax);
+
+        // Loop through each of needed amount of particles
+        for(int i = 0; i < count; i++)
+        {
+            cells.push_back(Cell(
+                xDistribution(gen), yDistribution(gen), sizeDistribution(gen), massDistribution(gen)
+            ));
+        }
+
+        return cells;
     }
 
     #pragma endregion

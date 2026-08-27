@@ -12,12 +12,15 @@ const float aspectScale = 100;
 /* Studies Related */
 
 const int particleCount = 10000;
-const int cellCount = 10;
+const int cellCount = 100;
 
 /* Visuals Related */
 
-const float particleRadius = .005;
-const std::array<float, 4> particleColor = {1.0f, 1.0f, 1.0f, 1.0f};
+const float particleRadius = .005f;
+const float cellRadius = .05f;
+
+const std::array<float, 4> particleColor = {0.0f, 0.0f, 0.1f, 1.0f};
+const std::array<float, 4> cellColor = {0.4f, 0.0f, 0.9f, 1.0f};
 
 #pragma endregion
 
@@ -203,31 +206,36 @@ int main()
     #pragma region Cell Initialization
 
     // Spawns cells at random normalized positions and adds them to cell list
-    /* CREATION OF A LIST OF EACH PARTICLE */
+    std::vector<bodies::Cell> cells = bodies::SpawnCells(
+        cellCount, // Amount of particles to spawn
+        -1, 1, // X min / max
+        -1, 1, // Y min / max
+        1, 10, // Mass min / max
+        .1, .1 // Size min / max
+    );
 
     // Farthest distance in which cells can interact
-    /* CALCULATIONS FOR HOW FAR EACH CELL CAN HYPOTHETICALLY REACH ANOTHER CELL */
+    const float maxCellQueryRadius = bodies::GlobalCell::repelRadius;
 
     // Cell diameter for big each grid cell is
-    /* CELL DIAMETER CALCULATION */
+    const float cellSpatialCellSize = std::max(bodies::GlobalParticle::radius * 2, maxCellQueryRadius * 0.5f); // Each grid cell must be at least one cell diameter, and also small enough to keep neighbor checks local
 
     // Calculate how many spaces are needed (in the standard OpenGL -1 to 1 world space)
-    /* TOTAL WORLD SIZE (1 - -1 = 2) / SIZE OF EACH CELL -> HOW MANY CELLS ARE NEEDED TO FILL THE WORLD */
+    const int cellGridCols = static_cast<int>(std::ceil(2.0f / cellSpatialCellSize));
 
     // Total number of cells needed
-    /* PREVIOUS NUMBER SQUARED */
-
-    // Range of check per cell
-    /* CELL RADIUS / GRID CELL (not to be confused with particle cell) SIZE AS AN INTEGER */
+    const int cellGridCellCount = cellGridCols * cellGridCols;
 
     // Create 2d vector of grid cells
-    /* VECTOR INITIALIZATION HERE */
+    std::vector<std::vector<int>> cellGridCells(cellGridCellCount);
 
     // Calculate on average how many cells will exist per grid space
-    /* TOTAL CELL COUNT / GRID CELL COUNT + 1; AS A BUFFER SET TO AT LEAST 10 */
+    int cellReserveAmount = static_cast<int>(particleCount / cellGridCellCount) + 1; // Estimate how many particles will go into each cell
+    if (cellReserveAmount < 10) cellReserveAmount = 10;
 
     // For each grid cell, allow for enough particles within it
-    /* LOOP THROUGH EACH GRID CELL AND .reserve() THE PREVIOUS NUMBER PER */
+    for (auto &cell : cellGridCells)
+        cell.reserve(cellReserveAmount);
 
     #pragma endregion
 
@@ -240,35 +248,31 @@ int main()
         -1, 1, // X min / max
         -1, 1, // Y min / max
         1, 10, // Mass min / max
-        .1, .1, // Size min / max
-        .00001, .01 // Speed min / max
+        .1, .1 // Size min / max
     );
 
     // Farthest distance in which particles can interact
-    const float maxQueryRadius = bodies::GlobalParticle::repelRadius;
+    const float maxParticleQueryRadius = bodies::GlobalParticle::repelRadius;
 
     // Particle diameter for big each grid cell is
-    const float spatialCellSize = std::max(bodies::GlobalParticle::radius * 2, maxQueryRadius * 0.5f); // Each particle must be at least one particle diameter, and also small enough to keep neighbor checks local
+    const float particleSpatialCellSize = std::max(bodies::GlobalParticle::radius * 2, maxParticleQueryRadius * 0.5f); // Each grid cell must be at least one particle diameter, and also small enough to keep neighbor checks local
 
     // Calculate how many spaces are needed (in the standard OpenGL -1 to 1 world space)
-    const int gridCols = static_cast<int>(std::ceil(2.0f / spatialCellSize));
+    const int particleGridCols = static_cast<int>(std::ceil(2.0f / particleSpatialCellSize));
 
     // Total number of cells needed
-    const int gridCellCount = gridCols * gridCols;
-
-    // Range of check per particle
-    const int maxCellOffset = static_cast<int>(std::ceil(maxQueryRadius / spatialCellSize));
+    const int particleGridCellCount = particleGridCols * particleGridCols;
 
     // Create 2d vector of grid cells
-    std::vector<std::vector<int>> gridCells(gridCellCount);
+    std::vector<std::vector<int>> particleGridCells(particleGridCellCount);
 
     // Calculate on average how many particles will exist per grid space
-    int reserveAmount = static_cast<int>(particleCount / gridCellCount) + 1; // Estimate how many particles will go into each cell
-    if (reserveAmount < 10) reserveAmount = 10;
+    int particleReserveAmount = static_cast<int>(particleCount / particleGridCellCount) + 1; // Estimate how many particles will go into each cell
+    if (particleReserveAmount < 10) particleReserveAmount = 10;
 
     // For each grid cell, allow for enough particles within it
-    for (auto &cell : gridCells)
-        cell.reserve(reserveAmount);
+    for (auto &cell : particleGridCells)
+        cell.reserve(particleReserveAmount);
 
     #pragma endregion
 
@@ -298,6 +302,7 @@ int main()
 
         /* RENDER STUFF HERE */
         circleRenderer.DrawBatch(particles, worldShader, aspect, particleColor, particleRadius);
+        circleRenderer.DrawBatch(cells, worldShader, aspect, cellColor, cellRadius);
 
         glfwPollEvents();
 

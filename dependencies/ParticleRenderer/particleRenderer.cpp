@@ -83,104 +83,32 @@ namespace gfx
         colorLoc = glGetUniformLocation(shader, "desiredColor");
     }
 
-    /* Single Circle Drawing */
-    // Draws circle based on already provided information and given circle information
-    void CircleRenderer::Draw(const Circle &c, GLuint shader, float aspect)
-    {
-        // What shader and vertex array OpenGL should use to render
-        glUseProgram(shader);
-        glBindVertexArray(vao);
-
-        // Use cached uniform locations when available
-        if (posLoc == -1 || scaleLoc == -1 || aspectLoc == -1 || colorLoc == -1)
-        {
-            // fallback: still attempt to set uniforms by querying locations
-            GLint pos = glGetUniformLocation(shader, "u_Position");
-            GLint scale = glGetUniformLocation(shader, "u_Scale");
-            GLint asp = glGetUniformLocation(shader, "u_Aspect");
-            GLint col = glGetUniformLocation(shader, "desiredColor");
-            if (pos != -1) glUniform2f(pos, c.x, c.y);
-            if (scale != -1) glUniform1f(scale, c.radius);
-            if (asp != -1) glUniform1f(asp, aspect);
-            if (col != -1) glUniform4f(col, c.color[0], c.color[1], c.color[2], c.color[3]);
-        }
-        else
-        {
-            glUniform2f(posLoc, c.x, c.y);
-            glUniform1f(scaleLoc, c.radius);
-            glUniform1f(aspectLoc, aspect);
-            glUniform4f(colorLoc, c.color[0], c.color[1], c.color[2], c.color[3]);
-        }
-
-        // Draws circle(aka triangle fan)
-        glDrawArrays(GL_TRIANGLE_FAN, 0, vertexCount);
-
-        // Unbind VAO to leave GL state clean
-        glBindVertexArray(0);
-    }
-
-    /* Draw a Body directly without constructing a temporary Circle. */
-    // Sets shader uniforms directly from the Body (position, radius, color) and draws.
-    void CircleRenderer::Draw(const bodies::Body &b, GLuint shader, float aspect)
-    {
-        // Bind program and VAO; avoid temporaries to reduce allocations and branches
-        glUseProgram(shader);
-        glBindVertexArray(vao);
-
-        if (posLoc == -1 || scaleLoc == -1 || aspectLoc == -1 || colorLoc == -1)
-        {
-            // Fallback behavior: query uniform locations if cache is invalid
-            GLint pos = glGetUniformLocation(shader, "u_Position");
-            GLint scale = glGetUniformLocation(shader, "u_Scale");
-            GLint asp = glGetUniformLocation(shader, "u_Aspect");
-            GLint col = glGetUniformLocation(shader, "desiredColor");
-            if (pos != -1) glUniform2f(pos, b.GetX(), b.GetY());
-            if (scale != -1) glUniform1f(scale, b.GetRadius());
-            if (asp != -1) glUniform1f(asp, aspect);
-            auto c = b.GetColor();
-            if (col != -1) glUniform4f(col, c[0], c[1], c[2], c[3]);
-        }
-        else
-        {
-            glUniform2f(posLoc, b.GetX(), b.GetY());
-            glUniform1f(scaleLoc, b.GetRadius());
-            glUniform1f(aspectLoc, aspect);
-            auto c = b.GetColor();
-            glUniform4f(colorLoc, c[0], c[1], c[2], c[3]);
-        }
-
-        // Draw the unit circle mesh scaled and translated by the shader uniforms
-        glDrawArrays(GL_TRIANGLE_FAN, 0, vertexCount);
-
-        // Unbind VAO
-        glBindVertexArray(0);
-    }
-
     /* Multiple Circles Drawing */
-    // Build a packed instance buffer from a vector of Particles and render
-    void CircleRenderer::DrawBatch(const std::vector<bodies::Particle>& particles, GLuint shader, float aspect, const std::array<float,4>& renderColor, float renderRadiusOverride)
-    {
-        // If there is no particles to display, exit function
-        if (particles.empty())
+    // Build a packed instance buffer from a vector of Bodies and render
+    void CircleRenderer::DrawBatch(
+        const std::vector<const bodies::Body*>& bodies, GLuint shader, float aspect, const std::array<float,4>& renderColor, float renderRadiusOverride
+    ) {
+        // If there are no bodies to display, exit function
+        if (bodies.empty())
             return;
 
-        // Prepare instance attribute data for all particles in a single contiguous buffer
-        size_t count = particles.size();
+        // Prepare instance attribute data for all bodies in a single contiguous buffer
+        size_t count = bodies.size();
         instanceData.resize(count * 7);
 
         for (size_t i = 0; i < count; ++i)
         {
-            const bodies::Particle& p = particles[i];
+            const bodies::Body& body = *bodies[i];
             
             // Link entity to an instance
             float *dst = instanceData.data() + i * 7;
 
             // Positionning
-            dst[0] = p.GetX();
-            dst[1] = p.GetY();
+            dst[0] = body.GetX();
+            dst[1] = body.GetY();
 
             // Use the override when provided so rendering size can differ from physics size
-            dst[2] = (renderRadiusOverride > 0.0f) ? renderRadiusOverride : p.GetRadius();
+            dst[2] = (renderRadiusOverride > 0.0f) ? renderRadiusOverride : body.GetRadius();
 
             // Coloring
             dst[3] = renderColor[0];
@@ -214,7 +142,7 @@ namespace gfx
         // Update uniform
         glUniform1f(aspectLoc, aspect);
 
-        // Draw the same circle mesh once per particle instance using the instance buffer
+        // Draw the same circle mesh once per body instance using the instance buffer
         glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, vertexCount, static_cast<GLsizei>(count));
 
         // Unbinds intermediates
