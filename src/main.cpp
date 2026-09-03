@@ -9,17 +9,19 @@ const char* programName = "Cell-Cell Adhesion Studies";
 const std::array<int, 2> aspectRatio = {16, 9};
 const float aspectScale = 100;
 
+const float timeScale = 1.0f;
+
 /* Studies Related */
 
 const int particleCount = 10000;
-const int cellCount = 100;
+const int cellCount = 0;
 
 /* Visuals Related */
 
 const float particleRadius = .005f;
 const float cellRadius = .05f;
 
-const std::array<float, 4> particleColor = {0.0f, 0.0f, 0.1f, 1.0f};
+const std::array<float, 4> particleColor = {0.0f, 0.0f, 0.5f, 1.0f};
 const std::array<float, 4> cellColor = {0.4f, 0.0f, 0.9f, 1.0f};
 
 #pragma endregion
@@ -137,6 +139,108 @@ static unsigned int InitializeShader(const std::string path)
 }
 
 #pragma endregion
+
+/* Interactions Function */
+// Calculates interactions between Particles based on their current spacial position
+void UpdateParticles(
+    std::vector<bodies::Particle>& particles, std::vector<bodies::Particle>& particlesWrite, std::vector<bodies::Particle*>& nearbyParticles, 
+    std::vector<std::vector<int>>& particleGridCells, const int& gridCols, const float& cellSize, float deltaTime
+)
+{
+    particlesWrite = particles;
+
+    // Clear previous frame's grid
+    for(auto& cell : particleGridCells)
+        cell.clear();
+
+    // Place particles in their grid cells
+    for(int i = 0; i < static_cast<int>(particles.size()); ++i)
+    {
+        // Get current world coordinates of particles
+        const float x = particles[i].GetX();
+        const float y = particles[i].GetY();
+
+        // Convert world coordinates ([-1, 1]) to grid coordinates ([0, 2])
+        // Round the particle position to it's nearest grid cell (essentially, grid locking)
+        int cellX = static_cast<int>((x + 1.0f) / cellSize);
+        int cellY = static_cast<int>((y + 1.0f) / cellSize);
+
+        cellX = std::clamp(cellX, 0, gridCols - 1);
+        cellY = std::clamp(cellY, 0, gridCols - 1);
+
+        // Convert from 2D coordinates to 1D inex
+        const int cellIndex = cellY * gridCols + cellX;
+
+        // Re-store the particle's new index
+        particleGridCells[cellIndex].push_back(i);
+    }
+
+    // Max distance one particle can repel another
+    const float queryRadius = bodies::GlobalParticle::repelRadius;
+    const float queryRadiusSquared = queryRadius * queryRadius;
+
+    // A particle may have to search multiple cells in each direction
+    const int maxCellOffset = static_cast<int>(
+        std::ceil(queryRadius / cellSize)
+    );
+
+    // For each particle:
+    for(int i = 0; i < static_cast<int>(particles.size()); ++i)
+    {
+        // Get particle positions
+        const float x = particles[i].GetX();
+        const float y = particles[i].GetY();
+
+        // Recalculate the current cell of a particle
+        int cellX = static_cast<int>((x + 1.0f) / cellSize);
+        int cellY = static_cast<int>((y + 1.0f) / cellSize);
+
+        cellX = std::clamp(cellX, 0, gridCols - 1);
+        cellY = std::clamp(cellY, 0, gridCols - 1);
+
+        // Search for nearby particles within the given range
+        for(int offsetY = -maxCellOffset; offsetY <= maxCellOffset; ++offsetY)
+            for(int offsetX = -maxCellOffset; offsetX <= maxCellOffset; ++offsetX)
+            {
+                // Check for particles in neighboring cells
+                const int neighborCellX = cellX + offsetX;
+                const int neighborCellY = cellY + offsetY;
+
+                // Ignore cells not in the sim
+                if(neighborCellX < 0 || neighborCellX >= gridCols ||
+                   neighborCellY < 0 || neighborCellY >= gridCols)
+                    continue;
+                
+                // Get index of neighboring cell
+                const int neighborCellIndex = neighborCellY * gridCols + neighborCellX;
+
+                // Get all the particles within grid cell
+                for(int j : particleGridCells[neighborCellIndex])
+                {
+                    // Skip if particle is itself
+                    if(i == j)
+                        continue;
+
+                    // Calculate distance beween two particles
+                    const float dx = particles[j].GetX() - x;
+                    const float dy = particles[j].GetY() - y;
+
+                    const float distanceSquared = dx*dx + dy*dy;
+
+                    // If particles are close enough
+                    if(distanceSquared <= queryRadiusSquared)
+                        nearbyParticles.emplace_back(&particles[j]);
+                }
+            }
+        
+        // Call particle's update function
+        particlesWrite[i].Update(deltaTime*timeScale, nearbyParticles);
+
+        nearbyParticles.clear();
+    }
+
+    particles = particlesWrite;
+}
 
 /* Random Number Generation Setup */
 // Populate bodies::gen to be used globally
@@ -284,6 +388,10 @@ int main()
     std::chrono::time_point currentTime = std::chrono::steady_clock::now();
     float deltaTime;
 
+    // Variables needed for neighboring bodies calculation
+    std::vector<bodies::Particle> particlesWrite;
+    std::vector<bodies::Particle*> nearbyParticles;
+
     while (!glfwWindowShouldClose(window))
     {
         /* DELTA TIME CALCULATIONS */
@@ -294,8 +402,7 @@ int main()
         /* EVERY FRAME CALCULATIONS */
 
         // Update positioning of each particle
-        for(int i = 0; i < particleCount; i++)
-            particles[i].Update(deltaTime);
+        UpdateParticles(particles, particlesWrite, nearbyParticles, particleGridCells, particleGridCols, particleSpatialCellSize, deltaTime*timeScale);
 
         // Clear screen
         glClear(GL_COLOR_BUFFER_BIT);

@@ -3,12 +3,12 @@
 /* Helper Functions */
 #pragma region Helper Functions
 
-/* Vector Normalization */
-// Normalize a vector to set all values to percent
+/* Array Normalization */
+// Normalize an array to set all values to percent
 template <std::size_t N>
 std::array<float, N> NormalizeArray(std::array<float, N> array)
 {
-    // Calculate the total length defined by the vector
+    // Calculate the total length defined by the array
     float length = 0.0f;
 
     for(float& value : array)
@@ -16,7 +16,7 @@ std::array<float, N> NormalizeArray(std::array<float, N> array)
 
     length = std::sqrt(length);
 
-    // Update each value of the vector to normalize
+    // Update each value of the array to normalize
     if(length > 0.0f)
         for(float& value : array)
             value /= length;
@@ -143,11 +143,16 @@ namespace bodies
 
     /* Particle Movement */
     // Update particle positions per frame based on surrounding bodies and goal
-    void Particle::Update(float deltaTime, const std::vector<Particle>& nearbyParticles, const std::vector<Cell>& nearbyCells)
+    void Particle::Update(float deltaTime, const std::vector<Particle*>& nearbyParticles, const std::vector<Cell*>& nearbyCells)
     {
         // Move towards goal
         velocity += NormalizeArray(goal - position) * GlobalParticle::moveSpeed;
-        velocity += NormalizeArray(goal - position) * GlobalParticle::moveSpeed;
+
+        // Move away from other particles
+        for(Particle* particle : nearbyParticles)
+        {
+            velocity -= NormalizeArray(particle->GetPosition() - position) * GlobalParticle::repelStrength;
+        }
 
         // Cap velocity
         if(velocity[0] > maxVelocity)
@@ -155,6 +160,12 @@ namespace bodies
         
         if(velocity[1] > maxVelocity)
             velocity[1] = maxVelocity;
+        
+        if(velocity[0] < -maxVelocity)
+            velocity[0] = -maxVelocity;
+        
+        if(velocity[1] < -maxVelocity)
+            velocity[1] = -maxVelocity;
 
         // Update positions
         position += velocity / mass * deltaTime;
@@ -163,9 +174,12 @@ namespace bodies
         velocity *= 0.9f;
 
         // Calculate distance from goal
-        float distance = std::sqrt(std::pow(goal[0] - position[0], 2) + std::pow(goal[1] - position[1], 2));
+        const float dx = goal[0] - position[0];
+        const float dy = goal[1] - position[1];
 
-        if(distance < GlobalParticle::reachGoalRadius)
+        const float distanceSquared = dx * dx + dy * dy;
+
+        if(distanceSquared < GlobalParticle::reachGoalRadius * GlobalParticle::reachGoalRadius)
         {
             // Calculate new goal
             goal[0] = goalXDistribution(gen);

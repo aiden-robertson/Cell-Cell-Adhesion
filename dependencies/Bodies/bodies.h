@@ -39,6 +39,7 @@ namespace bodies
 
             [[nodiscard]] const float& GetX() const { return position[0]; }
             [[nodiscard]] const float& GetY() const { return position[1]; }
+            [[nodiscard]] const std::array<float, 2>& GetPosition() const { return position; }
             [[nodiscard]] const float& GetRadius() const { return radius; }
     };
 
@@ -47,12 +48,12 @@ namespace bodies
 
     struct GlobalParticle
     {
-        static constexpr float repelRadius = .1;
+        static constexpr float repelRadius = .005;
         static constexpr float radius = .05;
 
         static constexpr float reachGoalRadius = .1;
 
-        static constexpr float repelStrength = .05;
+        static constexpr float repelStrength = 1;
 
         static constexpr float moveSpeed = .1;
         static constexpr float maxVelocity = 10;
@@ -73,8 +74,8 @@ namespace bodies
             );
 
             void Update(
-                float deltaTime = 1, const std::vector<Particle>& nearbyParticles = std::vector<Particle>(), 
-                const std::vector<Cell>& nearbyCells = std::vector<Cell>()
+                float deltaTime = 1, const std::vector<Particle*>& nearbyParticles = std::vector<Particle*>(), 
+                const std::vector<Cell*>& nearbyCells = std::vector<Cell*>()
             );
 
             [[nodiscard]] const float& GetMass() const { return mass; }
